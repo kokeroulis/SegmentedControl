@@ -59,6 +59,8 @@ public class SegmentedShape {
         GradientDrawable drawable = new GradientDrawable();
         drawable.setShape(GradientDrawable.RECTANGLE);
         drawable.setColor(color);
+        drawable.setStroke(2, mColorPrimary);
+
         // Look at the comments of the setCornerRadii for more details
         if (hasLeftRadius) {
             drawable.setCornerRadii(new float[] {mStokeRadius, mStokeRadius,

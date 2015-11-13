@@ -8,8 +8,5 @@
     <style name="SegmentedButton">
         <item name="android:gravity">center</item>
         <item name="android:button">@android:color/transparent</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:radius">5dp</item>
-        <item name="android:paddingRight">5dp</item>
     </style>
 </resources>
