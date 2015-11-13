@@ -12,6 +12,19 @@ buildscript {
     }
 }
 
+ext {
+    buildToolsVersion = "23.0.1"
+    compileSdkVersion = 23
+    minSdk = 16
+    targetSdk = 23
+    supportLibraryVersion = "23.0.1"
+    // rx
+
+    rxJava = 'io.reactivex:rxjava:1.0+'
+    rxAndroid = 'io.reactivex:rxandroid:1.0+'
+    rxBindings =  'com.jakewharton.rxbinding:rxbinding:0.2.0'
+}
+
 allprojects {
     repositories {
         jcenter()
