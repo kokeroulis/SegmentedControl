@@ -3,16 +3,9 @@
 
     <style name="SegmentedControlTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="buttonStyle">@style/SegmentedButton</item>
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="SegmentedButton">
-        <item name="android:textColor">@drawable/selector</item>
-        <item name="android:drawable">@drawable/selector</item>
-        <item name="android:minHeight">33dp</item>
-        <item name="android:minWidth">70dp</item>
         <item name="android:gravity">center</item>
         <item name="android:button">@android:color/transparent</item>
         <item name="android:paddingLeft">5dp</item>
