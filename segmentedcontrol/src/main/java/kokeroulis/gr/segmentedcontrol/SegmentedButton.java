@@ -16,13 +16,9 @@
 package kokeroulis.gr.segmentedcontrol;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 public class SegmentedButton extends RadioButton {
@@ -43,13 +39,9 @@ public class SegmentedButton extends RadioButton {
         final int colorPrimary = getColorFromAttr(R.attr.colorPrimary);
         final int colorAccent = getColorFromAttr(R.attr.colorAccent);
 
-        SegmentedShape shape = new SegmentedShape(colorPrimary, colorAccent, 20);
+        SegmentedShape shape = new SegmentedShape(colorPrimary, colorAccent, pxToDp(10));
         setBackground(shape.buildSelectorShapeFromColors(hasLeftRadius, hasRightRadius));
         setTextColor(shape.getColorStateList());
-
-        //setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, pxToDp(15)));
-        int f = getHeight();
-        int k = 5;
     }
 
     private int getColorFromAttr(int attr) {

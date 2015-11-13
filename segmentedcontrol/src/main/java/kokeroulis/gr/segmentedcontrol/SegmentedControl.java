@@ -17,9 +17,8 @@ package kokeroulis.gr.segmentedcontrol;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.RadioGroup;
 
 import java.util.ArrayList;
@@ -64,13 +63,11 @@ public class SegmentedControl extends RadioGroup
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mLayout.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-       // super.onLayout(changed, l ,t, r ,b);
         mLayout.onLayout(changed, l, t, r, b);
     }
 
@@ -130,59 +127,41 @@ public class SegmentedControl extends RadioGroup
 
 
     private class SegmentedLayoutImpl {
-        private int mHeight;
 
         protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
             final int width = MeasureSpec.getSize(widthMeasureSpec) - getPaddingLeft() - getPaddingRight();
 
-            int height = MeasureSpec.getSize(heightMeasureSpec);// - getPaddingTop() - getPaddingBottom();
+            int height = MeasureSpec.getSize(heightMeasureSpec) - getPaddingTop() - getPaddingBottom();
             final int count = getChildCount();
             int line_height = 0;
 
             int xpos = getPaddingLeft();
             int ypos = getPaddingTop();
 
-            int childHeightMeasureSpec;
-
-            if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
-                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.AT_MOST);
-
-            } else if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY) {
-                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-
-            } else {
-                childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-            }
-
             for (int i = 0; i < count; i++) {
                 final View child = getChildAt(i);
                 if (child.getVisibility() != GONE) {
-                    //final RadioGroup.LayoutParams lp = (RadioGroup.LayoutParams) child.getLayoutParams();
 
-                    int k = child.getHeight();
-                    child.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST), childHeightMeasureSpec - 300);
-                    int f = child.getHeight();
+                    child.measure(MeasureSpec.makeMeasureSpec(width, MeasureSpec.AT_MOST), MeasureSpec.makeMeasureSpec(pxToDp(35), MeasureSpec.EXACTLY));
                     final int childw = child.getMeasuredWidth();
-                    final int childh = child.getMeasuredHeight();
                     if (xpos + childw > width) {
                         xpos = getPaddingLeft();
                         ypos += line_height;
                     }
 
-                    xpos += childw;// + lp.horizontal_spacing;
-                    line_height = child.getMeasuredHeight();// + lp.vertical_spacing;
+                    xpos += childw;
+                    line_height = child.getMeasuredHeight();
                 }
             }
 
             if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED) {
                 height = ypos + line_height;
-
             } else if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.AT_MOST) {
                 if (ypos + line_height < height) {
-                    height = ypos + line_height - 20;
+                    height = ypos + line_height;
                 }
             }
-            setMeasuredDimension(width, height - 20);
+            setMeasuredDimension(width, height);
         }
 
         protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -197,19 +176,23 @@ public class SegmentedControl extends RadioGroup
                 if (child.getVisibility() != GONE) {
                     final int childw = child.getMeasuredWidth();
                     final int childh = child.getMeasuredHeight();
-                    //final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
                     if (xpos + childw > width) {
                         xpos = getPaddingLeft();
                         ypos += lineHeight;
                     }
 
-                    lineHeight = child.getMeasuredHeight();// + lp.vertical_spacing;
+                    lineHeight = child.getMeasuredHeight();
 
                     child.layout(xpos, ypos, xpos + childw, ypos + childh);
-                    xpos += childw;// + lp.horizontal_spacing;
+                    xpos += childw;
                 }
             }
         }
+    }
+
+    private int pxToDp(int px) {
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        return (int) ((px * displayMetrics.density));
     }
 }
