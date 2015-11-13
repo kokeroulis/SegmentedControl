@@ -45,12 +45,33 @@ public class SegmentedControl extends RadioGroup {
 
             SegmentedButton sb = new SegmentedButton(getContext(), mAttrs,
                                                      hasLeftRadius, hasRightRadius);
-            sb.setId(i);
+            sb.setId(i + 1);
             sb.setText(mItems.get(i));
             addView(sb);
         }
 
         invalidate();
+    }
+
+    public SegmentedButton findButtonById(int id) {
+        return (SegmentedButton) findViewById(id);
+    }
+
+    public SegmentedButton findButtonBySlug(final String slug) {
+        for (int i = 0; i< getChildCount(); i++) {
+            SegmentedButton sb = (SegmentedButton) getChildAt(i);
+            if (sb.getText().toString().equalsIgnoreCase(slug)) {
+                return sb;
+            }
+        }
+        return null;
+    }
+
+    public void setClickable(boolean clickable) {
+        for (int i = 0; i< getChildCount(); i++) {
+            SegmentedButton sb = (SegmentedButton) getChildAt(i);
+            sb.setClickable(clickable);
+        }
     }
 
     private void init(AttributeSet attrs) {

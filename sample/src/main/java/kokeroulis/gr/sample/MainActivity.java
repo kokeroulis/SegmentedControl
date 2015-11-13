@@ -1,16 +1,16 @@
 package kokeroulis.gr.sample;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import java.util.Arrays;
 
+import kokeroulis.gr.segmentedcontrol.SegmentedButton;
 import kokeroulis.gr.segmentedcontrol.SegmentedControl;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +24,23 @@ public class MainActivity extends AppCompatActivity {
 
         SegmentedControl control = (SegmentedControl) findViewById(R.id.segmentedControl);
         control.setEntries(Arrays.asList("foo", "bar", "zzz"));
+
+        SegmentedButton sb = control.findButtonById(1);
+        sb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "You clicked foo", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        SegmentedButton sb2 = control.findButtonBySlug("BAR");
+        sb2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "You clicked bar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override
