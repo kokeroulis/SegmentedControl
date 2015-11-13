@@ -22,7 +22,12 @@ import android.widget.RadioGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SegmentedControl extends RadioGroup {
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+
+public class SegmentedControl extends RadioGroup
+    implements Observable.OnSubscribe<Integer> {
 
     public List<String> mItems = new ArrayList<>();
     private AttributeSet mAttrs;
@@ -76,5 +81,33 @@ public class SegmentedControl extends RadioGroup {
 
     private void init(AttributeSet attrs) {
         mAttrs = attrs;
+    }
+
+    public Observable<Integer> selectionChanged() {
+        return Observable.create(this);
+    }
+
+    @Override
+    public void call(final Subscriber<? super Integer> subscriber) {
+        SegmentedControl.this.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (subscriber != null && !subscriber.isUnsubscribed()) {
+                    subscriber.onNext(checkedId);
+                }
+            }
+        });
+
+        subscriber.add(new Subscription() {
+            @Override
+            public void unsubscribe() {
+                SegmentedControl.this.setOnCheckedChangeListener(null);
+            }
+
+            @Override
+            public boolean isUnsubscribed() {
+                return subscriber != null && subscriber.isUnsubscribed();
+            }
+        });
     }
 }

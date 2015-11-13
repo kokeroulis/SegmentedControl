@@ -12,8 +12,11 @@ import java.util.Arrays;
 
 import kokeroulis.gr.segmentedcontrol.SegmentedButton;
 import kokeroulis.gr.segmentedcontrol.SegmentedControl;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        SegmentedControl control = (SegmentedControl) findViewById(R.id.segmentedControl);
+        final SegmentedControl control = (SegmentedControl) findViewById(R.id.segmentedControl);
         control.setEntries(Arrays.asList("foo", "bar", "zzz"));
 
         SegmentedButton sb = control.findButtonById(1);
@@ -40,6 +43,21 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "You clicked bar", Toast.LENGTH_SHORT).show();
             }
         });
+
+        mSubscription = control.selectionChanged()
+            .subscribe(new Action1<Integer>() {
+                @Override
+                public void call(Integer buttonId) {
+                    SegmentedButton sb = control.findButtonById(buttonId);
+                    final String msg = "Rx button clicked " + sb.getText().toString();
+                    Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
+                }
+            }, new Action1<Throwable>() {
+                @Override
+                public void call(Throwable error) {
+                    Toast.makeText(MainActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
     }
 
@@ -63,5 +81,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mSubscription.unsubscribe();
     }
 }
