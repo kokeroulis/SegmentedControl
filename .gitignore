@@ -3,6 +3,6 @@
 local.properties
 .idea
 .idea
-UiForms.iml
+*.iml
 .gradle
 .gradle
