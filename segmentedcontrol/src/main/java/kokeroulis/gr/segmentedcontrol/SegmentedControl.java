@@ -31,9 +31,10 @@ import rx.Subscription;
 public class SegmentedControl extends RadioGroup
     implements Observable.OnSubscribe<Integer> {
 
-    public List<String> mItems = new ArrayList<>();
+    private List<String> mItems;
     private AttributeSet mAttrs;
     private SegmentedLayoutImpl mLayout;
+    private boolean mUseCustomLayout;
 
     public SegmentedControl(Context context) {
         this(context, null);
@@ -45,8 +46,13 @@ public class SegmentedControl extends RadioGroup
     }
 
     public void setEntries(List<String> items) {
-        mItems = items;
+        // we are adding the same list.do nothing.
+        // we need to use that for the viewHolders...
+        if (mItems.size() == items.size()) {
+            return;
+        }
 
+        mItems = items;
         for (int i = 0; i < mItems.size(); i++) {
             boolean hasLeftRadius = i == 0;
             boolean hasRightRadius = (i + 1) == mItems.size();
@@ -61,19 +67,34 @@ public class SegmentedControl extends RadioGroup
         invalidate();
     }
 
+    public void setUseCustomLayout(boolean useCustomLayout) {
+        mUseCustomLayout = useCustomLayout;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        mLayout.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        if (mUseCustomLayout) {
+            mLayout.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        mLayout.onLayout(changed, l, t, r, b);
+        if (mUseCustomLayout) {
+            mLayout.onLayout(changed, l, t, r, b);
+        } else {
+            super.onLayout(changed, l, t, r, b);
+        }
     }
 
     public SegmentedButton findButtonById(int id) {
         return (SegmentedButton) findViewById(id);
     }
+
+
 
     public SegmentedButton findButtonBySlug(final String slug) {
         for (int i = 0; i< getChildCount(); i++) {
@@ -95,6 +116,7 @@ public class SegmentedControl extends RadioGroup
     private void init(AttributeSet attrs) {
         mAttrs = attrs;
         mLayout = new SegmentedLayoutImpl();
+        mItems = new ArrayList<>();
     }
 
     public Observable<Integer> selectionChanged() {

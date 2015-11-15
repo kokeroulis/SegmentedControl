@@ -19,6 +19,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 
 public class SegmentedButton extends RadioButton {
@@ -42,6 +43,7 @@ public class SegmentedButton extends RadioButton {
         SegmentedShape shape = new SegmentedShape(colorPrimary, colorAccent, pxToDp(10));
         setBackground(shape.buildSelectorShapeFromColors(hasLeftRadius, hasRightRadius));
         setTextColor(shape.getColorStateList());
+        setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, pxToDp(35)));
     }
 
     private int getColorFromAttr(int attr) {
